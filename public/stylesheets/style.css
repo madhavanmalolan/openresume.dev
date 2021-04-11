@@ -1,0 +1,25 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  width: calc(100% - 110px)
+}
+
+a {
+  color: #00B7FF;
+}
+
+.boxable {
+  margin-right:12px; 
+  padding: 12px; 
+  border-width: 1px; 
+  border-style: solid; 
+  border-radius: 4px; 
+  max-width: 400px; 
+  width: 100%; 
+  margin-top: 12px;
+  overflow: auto;
+}
+
+h2 {
+  margin-top: 48px;
+}

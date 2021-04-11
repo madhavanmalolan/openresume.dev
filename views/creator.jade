@@ -1,0 +1,61 @@
+extends layout
+
+block content
+  script.
+    const sites = ['github', 'linkedin', 'medium', 'producthunt', 'appleappstore', 'googleplay', 'googleanalytics'];
+    for(const i in sites){
+      const site = sites[i];
+      if(localStorage.getItem(`${site}_profile`) && localStorage.getItem(`${site}_accesstoken`) && parseInt(localStorage.getItem(`${site}_validupto`) > Date.now())){
+        $(site).html(localStorage.getItem(`${site}_profile`));
+      }
+    }
+
+  h1 Create your Dev Resume
+  p Link your online profiles to build the best developer resume ever. 
+  table 
+    tr 
+      td GitHub 
+      td
+        if github
+          = github.profile
+        else 
+          a(href="https://github.com/login/oauth/authorize?client_id="+Constants.GITHUB_CLIENTID) Link Now
+
+    tr 
+      td StackOverflow 
+      td
+        if stackoverflow
+          = stackoverflow.profile
+        else 
+          a(href="https://stackoverflow.com/oauth?client_id="+Constants.STACKOVERFLOW_CLIENTID+"&redirect_uri=https://openresume.dev/oauth/stackoverflow&scope=private_info") Link Now
+
+    tr 
+      td ProductHunt 
+      td
+        if producthunt
+          = producthunt.username
+        else 
+          a(href="https://api.producthunt.com/v2/oauth/authorize?client_id="+Constants.PRODUCTHUNT_CLIENTID+"&redirect_uri=https://openresume.dev/oauth/producthunt&response_type=code&scope=public+private") Link Now
+
+    tr 
+      td LinkedIn 
+      td
+        if linkedin
+          = linkedin.profile
+        else 
+          input(id="linkedin" placeholder="LinkedIn Profile URL")
+          a(style="cursor: pointer" onclick="window.location.href='/oauth/linkedin?link='+$('#linkedin').val()") &nbsp; Link Now
+    tr 
+      td Medium.com 
+      td
+        if medium
+          @#{medium.username}
+        else 
+          input(id="mediumusername" placeholder="Medium username")
+          a(style="cursor: pointer" onclick="window.location.href='/oauth/medium?username='+$('#mediumusername').val()") &nbsp; Link Now
+
+  form(action="/creator" method="post" style="margin-top: 12px")
+    input(type="submit" value="Create Resume" )
+
+  br
+  a(href="https://openresume.dev/madhavanmalolan" target="_blank") [See sample]

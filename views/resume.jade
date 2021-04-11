@@ -1,0 +1,50 @@
+extends layout
+
+block content
+  div(style="display: flex; flex-direction: row; margin-bottom: 12px; width: 100%")
+    if resume.profiles.linkedin
+      h1 #{resume.name} #[a(href=resume.profiles.linkedin.profile target="_blank" style="margin-left: 12px;") #[i(class="fa fa-linkedin")]]
+  h2 #[a(href=resume.profiles.github.profileUrl target="_blank") GitHub]
+  p #[i(class="fa fa-code")] #{resume.profiles.github.sortedRepos.length}
+  div(style="display: flex; flex-wrap: wrap")
+    for repo in resume.profiles.github.sortedRepos.slice(0,4)
+      div(class="boxable")
+        h3 #[a(href="https://github.com/"+repo.full_name target="_blank") #{repo.full_name}]
+        p= repo.description
+        p(class="helptext") #[i(class="fa fa-star")] #{repo.stargazers_count} &nbsp; #[i(class="fa fa-calendar")] #{repo.pushed_at}
+  div(style="margin-top: 12px")
+    - each language in resume.profiles.github.languageList
+        span #{language.language} &nbsp;
+  if resume.profiles.producthunt
+    h2 #[a(href="https://producthunt.com/@"+resume.profiles.producthunt.username+"/made" target="_blank") ProductHunt]
+    p #[i(class="fa fa-rocket")] #{resume.profiles.producthunt.madePosts.edges.length}
+    div(style="display: flex; flex-wrap: wrap")
+      for post in resume.profiles.producthunt.madePosts.edges.sort((p1, p2) => p2.node.votesCount - p1.node.votesCount).slice(0,4)
+        div(class="boxable")
+          div(style="flex-direction: row")
+            img(src=post.node.thumbnail.url style="width: 50px; height: 50px; border-radius: 8px")
+            h3 #[a(href=post.node.url target="_blank") #{post.node.name}]
+          p= post.node.description
+          p(class="helptext") #[i(class="fa fa-star")] #{post.node.votesCount} &nbsp; #[i(class="fa fa-calendar")] #{post.node.featuredAt}
+   
+  if resume.profiles.stackoverflow && resume.profiles.stackoverflow.answers && resume.profiles.stackoverflow.answers.length > 0
+    h2 #[a(href=resume.profiles.stackoverflow.answers[0].owner.link target="_blank") StackOverflow]
+    p #[i(class="fa fa-trophy")] &nbsp; #{resume.profiles.stackoverflow.answers[0].owner.reputation}
+    div(style="display: flex; flex-wrap: wrap")
+      for answer in resume.profiles.stackoverflow.answers.slice(0,6)
+        div(class="boxable")
+          p(style="font-weight: bold") #[a(href="https://stackoverflow.com/a/"+answer.question_id+"/"+answer.answer_id target="_blank") #{answer.title}]
+          div!= answer.body 
+          p(class="helptext") #[i(class="fa fa-star")] #{answer.score} &nbsp; #[i(class="fa fa-calendar")] #{(new Date(answer.creation_date * 1000)).toLocaleDateString("en-US", { dateStyle: "short"})}
+    
+  if resume.profiles.medium
+    h2 #[a(href="https://medium.com/@"+resume.profiles.medium.username target="_blank") Medium Blogs]
+    p #[i(class="fa fa-rss")] &nbsp; #{resume.profiles.medium.rss.items.length}
+    div
+      for post in resume.profiles.medium.rss.items.slice(0,10)
+        ul
+          li #[a(href=post.url target="_blank") #{post.title}]
+  
+
+  h3(style="margin-top: 32px") This resume has been built using  
+  p #[a(href="https://openresume.dev") Open Developer Resume]
